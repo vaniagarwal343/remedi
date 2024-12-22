@@ -1,0 +1,16 @@
+.header {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .logo {
+    width: 50px;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .greeting {
+    font-size: 24px;
+    color: #333;
+  }
+  
