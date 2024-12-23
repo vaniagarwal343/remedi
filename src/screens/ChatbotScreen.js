@@ -9,32 +9,32 @@ const ChatbotScreen = () => {
 
   const handleSend = async () => {
     if (!input.trim()) return; // Ignore empty input
-
+  
     // Add the user message to the chat history
     setMessages((prev) => [...prev, { sender: "user", text: input }]);
     setInput(""); // Clear input field
     setLoading(true); // Show loading indicator
-
+  
     try {
-      // Update the API URL to your backend's correct endpoint
+      // Call the backend API
       const response = await axios.post(
-        "https://<us-central1>-<remedicate-app>.cloudfunctions.net/api/chat",
+        "https://us-central1-remedicate-app.cloudfunctions.net/api/chat",
         { prompt: input }
-      );      
-
+      );
+  
       // Extract AI response and add it to chat history
       const aiResponse = response.data.response.trim();
       setMessages((prev) => [...prev, { sender: "bot", text: aiResponse }]);
     } catch (error) {
+      const errorMessage =
+        error.response?.data?.error || "Oops! Something went wrong. Please try again.";
       console.error("Error calling backend API:", error);
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "Oops! Something went wrong. Please try again." },
-      ]);
+      setMessages((prev) => [...prev, { sender: "bot", text: errorMessage }]);
     } finally {
       setLoading(false); // Hide loading indicator
     }
   };
+  
 
   return (
     <div className="chatbot-screen">
