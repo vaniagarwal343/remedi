@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../styles/ChatbotScreen.css"; // Ensure this file is present for styling
+import "../styles/ChatbotScreen.css"; // Ensure this file exists for styling
 
 const ChatbotScreen = () => {
   const [messages, setMessages] = useState([]); // Chat history
@@ -16,15 +16,14 @@ const ChatbotScreen = () => {
     setLoading(true); // Show loading indicator
 
     try {
-      // Send the user's message to the backend
+      // Update the API URL to your backend's correct endpoint
       const response = await axios.post(
-        "https://<your-firebase-project>.cloudfunctions.net/chat",
+        "https://<your-region>-<project-id>.cloudfunctions.net/api/chat",
         { prompt: input }
-      );
-      
+      );      
 
-      // Extract AI response and add to chat history
-      const aiResponse = response.data.text.trim();
+      // Extract AI response and add it to chat history
+      const aiResponse = response.data.response.trim();
       setMessages((prev) => [...prev, { sender: "bot", text: aiResponse }]);
     } catch (error) {
       console.error("Error calling backend API:", error);
