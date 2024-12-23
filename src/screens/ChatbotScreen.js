@@ -18,7 +18,7 @@ const ChatbotScreen = () => {
     try {
       // Update the API URL to your backend's correct endpoint
       const response = await axios.post(
-        "https://<your-region>-<project-id>.cloudfunctions.net/api/chat",
+        "https://<us-central1>-<remedicate-app>.cloudfunctions.net/api/chat",
         { prompt: input }
       );      
 
