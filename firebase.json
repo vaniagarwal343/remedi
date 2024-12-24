@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "remedicate-app", // Explicitly set the site name
     "public": "build",
     "ignore": [
       "firebase.json",
@@ -7,6 +8,10 @@
       "**/node_modules/**"
     ],
     "rewrites": [
+      {
+        "source": "/api/**",
+        "function": "api"
+      },
       {
         "source": "**",
         "destination": "/index.html"
