@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "remedicate-app", // Explicitly set the site name
+    "site": "remedicate-app",
     "public": "build",
     "ignore": [
       "firebase.json",
