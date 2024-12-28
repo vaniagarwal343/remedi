@@ -2,13 +2,13 @@ import { onRequest } from "firebase-functions/v2/https";
 import { OpenAI } from "openai";
 
 export const api = onRequest({
-  cors: ["https://remedicate-app.web.app", "https://remedicate-app.firebaseapp.com"]
-}, async (req, res) => {
-  if (req.method === "OPTIONS") {
-    res.status(204).send("");
-    return;
+  invoker: 'public',  // This allows public access
+  cors: {
+    origin: ["https://remedicate-app.web.app", "https://remedicate-app.firebaseapp.com"],
+    methods: ["POST", "OPTIONS"],
+    maxAge: 3600
   }
-
+}, async (req, res) => {
   try {
     const { prompt } = req.body;
     if (!prompt) {
