@@ -18,7 +18,7 @@ const ChatbotScreen = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(API_URL, { prompt: input });
+      const response = await axios.post(`${API_URL}/api/chat`, { prompt: input });
       const aiResponse = response.data?.response?.trim();
       if (!aiResponse) throw new Error("Invalid AI response");
 
