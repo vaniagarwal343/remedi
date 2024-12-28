@@ -1,20 +1,11 @@
-import * as functions from "firebase-functions";
+import { onRequest } from "firebase-functions/v2/https";
 import { OpenAI } from "openai";
 
-export const api = functions.https.onRequest(async (req, res) => {
-  // Enable CORS - modify to match your frontend domain
-  res.set("Access-Control-Allow-Origin", "https://remedicate-app.web.app");
-  res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.set("Access-Control-Allow-Headers", "Content-Type");
-
-  // Handle preflight requests
+export const api = onRequest({
+  cors: ["https://remedicate-app.web.app", "https://remedicate-app.firebaseapp.com"]
+}, async (req, res) => {
   if (req.method === "OPTIONS") {
     res.status(204).send("");
-    return;
-  }
-
-  if (req.method !== "POST") {
-    res.status(405).send("Method Not Allowed");
     return;
   }
 
@@ -26,7 +17,7 @@ export const api = functions.https.onRequest(async (req, res) => {
     }
 
     const openai = new OpenAI({
-      apiKey: functions.config().openai.key,
+      apiKey: process.env.OPENAI_API_KEY,
     });
 
     const response = await openai.chat.completions.create({
