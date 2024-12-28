@@ -7,9 +7,6 @@ const ChatbotScreen = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const API_URL = process.env.REACT_APP_API_URL;
-  console.log("API_URL:", API_URL);
-
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -18,13 +15,18 @@ const ChatbotScreen = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(process.env.REACT_APP_API_URL, { prompt: input });
+      // Using axios.create to ensure consistent base URL
+      const api = axios.create({
+        baseURL: 'https://us-central1-remedicate-app.cloudfunctions.net'
+      });
+
+      const response = await api.post('/api/chat', { prompt: input });
       const aiResponse = response.data?.response?.trim();
       if (!aiResponse) throw new Error("Invalid AI response");
 
       setMessages((prev) => [...prev, { sender: "bot", text: aiResponse }]);
     } catch (error) {
-      console.error("Error details:", error.response || error);
+      console.error("Error details:", error);
       const errorMessage =
         error.response?.data?.error ||
         "Oops! Something went wrong. Please try again.";
@@ -32,7 +34,7 @@ const ChatbotScreen = () => {
     } finally {
       setLoading(false);
     }
-};
+  };
 
   return (
     <div className="chatbot-screen">
