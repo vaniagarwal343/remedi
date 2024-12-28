@@ -1,36 +1,21 @@
+import * as functions from "firebase-functions";
 import express from "express";
 import cors from "cors";
-import { https } from "firebase-functions/v2";
-import OpenAI from "openai";
-import * as dotenv from "dotenv";
+import { OpenAI } from "openai";
 
-// Load environment variables from .env
-dotenv.config();
-
-// Create Express app
 const app = express();
-app.use(cors({ origin: true }));
+app.use(cors());
 app.use(express.json());
 
-// Test route
-app.get("/", (req, res) => {
-  res.send("Hello from Firebase Functions!");
+const openai = new OpenAI({
+  apiKey: functions.config().openai.key,
 });
 
-// Chat route
 app.post("/chat", async (req, res) => {
   try {
     const { prompt } = req.body;
+    if (!prompt) return res.status(400).send("No prompt provided");
 
-    if (!prompt) {
-      return res.status(400).send({ error: "Prompt is required" });
-    }
-
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY, // Load the API key from .env
-    });
-
-    // Call OpenAI API
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
@@ -38,16 +23,20 @@ app.post("/chat", async (req, res) => {
 
     res.json({ response: response.choices[0].message.content });
   } catch (error) {
-    console.error("Error in /chat route:", error.message);
-    res.status(500).send({ error: error.message || "Internal server error" });
+    console.error("Error:", error);
+    res.status(500).send("Error processing request");
   }
 });
 
-// Firebase Function export
-export const api = https.onRequest(
-    {
-      timeoutSeconds: 120, // Allow sufficient time for processing
-      memory: "1GiB", // Allocate sufficient memory
-    },
-    app,
-);
+// Add a health check endpoint
+app.get("/", (req, res) => {
+  res.status(200).send("Hello, World!");
+});
+
+// Listen on the correct port
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+export const api = functions.https.onRequest(app);
