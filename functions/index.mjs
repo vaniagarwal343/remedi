@@ -1,20 +1,33 @@
 import * as functions from "firebase-functions";
-import express from "express";
-import cors from "cors";
 import { OpenAI } from "openai";
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+export const api = functions.https.onRequest(async (req, res) => {
+  // Enable CORS - modify to match your frontend domain
+  res.set("Access-Control-Allow-Origin", "https://remedicate-app.web.app");
+  res.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.set("Access-Control-Allow-Headers", "Content-Type");
 
-const openai = new OpenAI({
-  apiKey: functions.config().openai.key,
-});
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    res.status(204).send("");
+    return;
+  }
 
-app.post("/chat", async (req, res) => {
+  if (req.method !== "POST") {
+    res.status(405).send("Method Not Allowed");
+    return;
+  }
+
   try {
     const { prompt } = req.body;
-    if (!prompt) return res.status(400).send("No prompt provided");
+    if (!prompt) {
+      res.status(400).send("No prompt provided");
+      return;
+    }
+
+    const openai = new OpenAI({
+      apiKey: functions.config().openai.key,
+    });
 
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
@@ -27,16 +40,3 @@ app.post("/chat", async (req, res) => {
     res.status(500).send("Error processing request");
   }
 });
-
-// Add a health check endpoint
-app.get("/", (req, res) => {
-  res.status(200).send("Hello, World!");
-});
-
-// Listen on the correct port
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
-export const api = functions.https.onRequest(app);

@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../styles/ChatbotScreen.css"; // Ensure this file exists for styling
+import "../styles/ChatbotScreen.css";
 
 const ChatbotScreen = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const api = axios.create({
+    baseURL: "https://us-central1-remedicate-app.cloudfunctions.net"
+  });
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -15,12 +19,7 @@ const ChatbotScreen = () => {
     setLoading(true);
 
     try {
-      // Using axios.create to ensure consistent base URL
-      const api = axios.create({
-        baseURL: 'https://us-central1-remedicate-app.cloudfunctions.net'
-      });
-
-      const response = await api.post('/api/chat', { prompt: input });
+      const response = await api.post("/api/chat", { prompt: input });
       const aiResponse = response.data?.response?.trim();
       if (!aiResponse) throw new Error("Invalid AI response");
 
@@ -33,6 +32,13 @@ const ChatbotScreen = () => {
       setMessages((prev) => [...prev, { sender: "bot", text: errorMessage }]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && !e.shiftKey && !loading) {
+      e.preventDefault();
+      handleSend();
     }
   };
 
@@ -58,6 +64,7 @@ const ChatbotScreen = () => {
           placeholder="Type your message..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onKeyPress={handleKeyPress}
         />
         <button onClick={handleSend} disabled={loading}>
           Send
