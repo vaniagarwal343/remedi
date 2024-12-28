@@ -18,12 +18,13 @@ const ChatbotScreen = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_URL}/api/chat`, { prompt: input });
+      const response = await axios.post(process.env.REACT_APP_API_URL, { prompt: input });
       const aiResponse = response.data?.response?.trim();
       if (!aiResponse) throw new Error("Invalid AI response");
 
       setMessages((prev) => [...prev, { sender: "bot", text: aiResponse }]);
     } catch (error) {
+      console.error("Error details:", error.response || error);
       const errorMessage =
         error.response?.data?.error ||
         "Oops! Something went wrong. Please try again.";
@@ -31,7 +32,7 @@ const ChatbotScreen = () => {
     } finally {
       setLoading(false);
     }
-  };
+};
 
   return (
     <div className="chatbot-screen">
