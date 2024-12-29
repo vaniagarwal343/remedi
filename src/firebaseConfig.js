@@ -1,24 +1,24 @@
-// Import Firebase SDK components
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
 
-// Firebase configuration object
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
+  apiKey: "AIzaSyDWgWicsKnOffJMhFtlkGg6qW5WhYf7tQo",
+  authDomain: "remedicate-app.firebaseapp.com",
+  projectId: "remedicate-app",
+  storageBucket: "remedicate-app.firebasestorage.app",
+  messagingSenderId: "485284880675",
+  appId: "1:485284880675:web:4ef569e5977975539f2c96",
+  measurementId: "G-5GJMFFRH7K"
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
-console.log("API Key:", process.env.REACT_APP_FIREBASE_API_KEY);
+// Export Firebase services
+export const auth = getAuth(app);
+export const db = getFirestore(app);
 
-// Firebase services
-export const auth = getAuth(app); // For OAuth and authentication
-export const db = getFirestore(app); // For Firestore database
+export default app;
