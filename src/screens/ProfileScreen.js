@@ -1,51 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { doc, getDoc, setDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import "../styles/ProfileScreen.css";
-import { auth, db} from "../firebaseConfig";
+import { auth, db } from "../firebaseConfig";
+import { useUserProfile } from '../context/UserProfileContext';
 
 const ProfileScreen = () => {
-  const [name, setName] = useState("");
-  // const [email, setEmail] = useState("");
-  const [allergies, setAllergies] = useState("");
-  const [conditions, setConditions] = useState("");
-  const [medications, setMedications] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const user = auth.currentUser;
-        if (!user) return navigate("/");
-
-        // Fetch user profile data
-        const userDocRef = doc(db, "users", user.uid);
-        const userDoc = await getDoc(userDocRef);
-
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          setName(userData.name || "");
-          // setEmail(user.email); // Email comes from authentication
-          setAllergies(userData.allergies || "");
-          setConditions(userData.conditions || "");
-        }
-
-        // Fetch user medications
-        const medsQuery = query(collection(db, "medications"), where("userId", "==", user.uid));
-        const medsSnapshot = await getDocs(medsQuery);
-        const meds = medsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setMedications(meds);
-
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching profile data:", error);
-      }
-    };
-
-    fetchProfileData();
-  }, [navigate]);
+  const { profileData, loading, refreshProfile } = useUserProfile();
+  const [name, setName] = useState(profileData?.name || "");
+  const [allergies, setAllergies] = useState(profileData?.allergies || "");
+  const [conditions, setConditions] = useState(profileData?.conditions || "");
 
   const handleSave = async () => {
     try {
@@ -59,6 +24,7 @@ const ProfileScreen = () => {
         conditions,
       });
 
+      await refreshProfile(); // Refresh profile data after saving
       alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error saving profile:", error);
@@ -86,10 +52,6 @@ const ProfileScreen = () => {
             onChange={(e) => setName(e.target.value)}
           />
         </label>
-        {/* <label>
-          Email:
-          <input type="email" value={email} readOnly />
-        </label> */}
       </section>
 
       <section className="medical-history-section">
@@ -112,9 +74,9 @@ const ProfileScreen = () => {
 
       <section className="medication-list-section">
         <h2>Current Medications</h2>
-        {medications.length > 0 ? (
+        {profileData?.medications?.length > 0 ? (
           <ul>
-            {medications.map((med) => (
+            {profileData.medications.map((med) => (
               <li key={med.id}>
                 <strong>{med.medicationName}</strong> - {med.dosage} ({med.frequency})
               </li>

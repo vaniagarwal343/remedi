@@ -1,52 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { auth, db } from "../firebaseConfig";
-import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
+import { useUserProfile } from "../context/UserProfileContext";
 import "../styles/ChatbotScreen.css";
 
 const ChatbotScreen = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [userProfile, setUserProfile] = useState(null);
-
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const user = auth.currentUser;
-        if (!user) {
-          console.log("No authenticated user");
-          return;
-        }
-
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        console.log("User doc data:", userDoc.data());
-
-        const medsQuery = query(
-          collection(db, "medications"), 
-          where("userId", "==", user.uid)
-        );
-        const medsSnapshot = await getDocs(medsQuery);
-        const medications = medsSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        console.log("Medications:", medications);
-
-        const profileData = {
-          ...userDoc.data(),
-          medications
-        };
-        console.log("Setting user profile:", profileData);
-        setUserProfile(profileData);
-
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
+  const { profileData, loading: profileLoading } = useUserProfile();
 
   const getConversationHistory = () => {
     return messages.slice(-5).map(msg => ({
@@ -56,7 +17,7 @@ const ChatbotScreen = () => {
   };
 
   const handleSend = async () => {
-    if (!input.trim()) return;
+    if (!input.trim() || loading) return;
 
     const newUserMessage = { sender: "user", text: input };
     setMessages(prev => [...prev, newUserMessage]);
@@ -64,12 +25,12 @@ const ChatbotScreen = () => {
     setLoading(true);
 
     try {
-      console.log("Sending request with profile:", userProfile);
+      console.log("Sending request with profile:", profileData);
       const response = await axios.post(
         'https://us-central1-remedicate-app.cloudfunctions.net/api/chat',
         {
           prompt: input,
-          userProfile,
+          userProfile: profileData,
           conversationHistory: getConversationHistory()
         }
       );
@@ -95,6 +56,10 @@ const ChatbotScreen = () => {
     }
   };
 
+  if (profileLoading) {
+    return <div>Loading profile data...</div>;
+  }
+
   return (
     <div className="chatbot-screen">
       <header className="chat-header">
@@ -118,6 +83,7 @@ const ChatbotScreen = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
+          disabled={loading}
         />
         <button onClick={handleSend} disabled={loading}>
           Send
