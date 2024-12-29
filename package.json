@@ -9,6 +9,7 @@
     "express": "^4.21.2",
     "firebase": "^11.1.0",
     "firebase-functions": "^6.2.0",
+    "lucide-react": "^0.469.0",
     "openai": "^4.77.0",
     "react": "^19.0.0",
     "react-calendar": "^5.1.0",

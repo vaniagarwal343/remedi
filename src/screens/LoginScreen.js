@@ -1,63 +1,55 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // For navigation
-import { signInWithEmailAndPassword } from 'firebase/auth'; // Firebase auth method
+import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from "../firebaseConfig";
+import './styles/loginscreen.css'; // Import the CSS file
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
-  // Login function
   const handleLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       alert('Logged in successfully!');
-      navigate('/home'); // Redirect to the home screen
+      navigate('/home');
     } catch (error) {
       alert('Login failed: ' + error.message);
     }
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>Login</h1>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        style={styles.input}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        style={styles.input}
-      />
-      <button onClick={handleLogin} style={styles.button}>
-        Login
-      </button>
-      <p>
-        Don’t have an account?{' '}
-        <span
-          style={styles.link}
-          onClick={() => navigate('/register')} // Navigate to registration
-        >
-          Register Now
-        </span>
-      </p>
+    <div className="login-container">
+      <h1 className="login-title">Welcome Back</h1>
+      <p className="login-subtitle">Please log in to continue</p>
+      <div className="login-form">
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="login-input"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="login-input"
+        />
+        <button onClick={handleLogin} className="login-button">
+          Login
+        </button>
+        <p className="login-footer">
+          Don’t have an account?{' '}
+          <span className="login-link" onClick={() => navigate('/register')}>
+            Register Now
+          </span>
+        </p>
+      </div>
     </div>
   );
-};
-
-const styles = {
-  container: { padding: 20, maxWidth: 400, margin: 'auto', textAlign: 'center' },
-  title: { marginBottom: 20 },
-  input: { width: '100%', padding: 10, margin: '10px 0', borderRadius: 5, border: '1px solid #ccc' },
-  button: { padding: 10, backgroundColor: '#003366', color: '#fff', border: 'none', borderRadius: 5 },
-  link: { color: '#003366', cursor: 'pointer' },
 };
 
 export default LoginScreen;

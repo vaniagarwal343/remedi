@@ -1,17 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from 'react';
 import axios from "axios";
 import { useUserProfile } from '../context/UserProfileContext';
-import "../styles/ChatbotScreen.css";
+import { Send, Loader, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 const ChatbotScreen = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const { profileData, loading: profileLoading } = useUserProfile();
+  const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
-  // Debug logging
-  console.log('ChatbotScreen current profile:', profileData);
-  console.log('ChatbotScreen profile loading:', profileLoading);
+  // Auto-scroll to bottom when new messages arrive
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  // Focus input on mount
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
 
   const getConversationHistory = () => {
     return messages.slice(-5).map(msg => ({
@@ -29,7 +42,6 @@ const ChatbotScreen = () => {
     setLoading(true);
 
     try {
-      console.log('Sending request with profile:', profileData);
       const response = await axios.post(
         'https://us-central1-remedicate-app.cloudfunctions.net/api/chat',
         {
@@ -38,8 +50,6 @@ const ChatbotScreen = () => {
           conversationHistory: getConversationHistory()
         }
       );
-
-      console.log('API Response:', response.data);
 
       const aiResponse = response.data?.response?.trim();
       if (!aiResponse) throw new Error("Invalid AI response");
@@ -62,64 +72,110 @@ const ChatbotScreen = () => {
     }
   };
 
+  const MessageBubble = ({ message }) => {
+    const isUser = message.sender === 'user';
+    return (
+      <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
+        <div
+          className={`max-w-[80%] p-3 rounded-2xl ${
+            isUser
+              ? 'bg-blue-600 text-white rounded-tr-none'
+              : 'bg-gray-100 text-gray-800 rounded-tl-none'
+          }`}
+        >
+          <p className="text-sm">{message.text}</p>
+        </div>
+      </div>
+    );
+  };
+
   if (profileLoading) {
     return (
-      <div className="chatbot-screen">
-        <header className="chat-header">
-          <h1>Health Assistant</h1>
-        </header>
-        <div className="loading">Loading profile data...</div>
+      <div className="flex flex-col h-screen bg-white">
+        <div className="bg-[#003366] text-white px-4 py-6">
+          <h1 className="text-2xl font-semibold text-center">Health Assistant</h1>
+        </div>
+        <div className="flex-1 flex items-center justify-center flex-col gap-3">
+          <Loader className="w-8 h-8 animate-spin text-[#003366]" />
+          <span className="text-gray-600 font-medium">Loading profile data...</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="chatbot-screen">
-      <header className="chat-header">
-        <h1>Health Assistant</h1>
+    <div className="flex flex-col h-screen bg-white">
+      {/* Header */}
+      <div className="bg-[#003366] text-white px-4 py-6">
+        <h1 className="text-2xl font-semibold text-center">Health Assistant</h1>
         {profileData && (
-          <div className="profile-status">
+          <p className="text-sm text-gray-300 text-center mt-1">
             Profile loaded for: {profileData.name || 'User'}
+          </p>
+        )}
+      </div>
+
+      {/* Chat Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-2">
+        {messages.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center px-4">
+            <div className="bg-blue-50 rounded-full p-3 mb-4">
+              <AlertCircle className="w-6 h-6 text-blue-500" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Welcome to Your Health Assistant</h3>
+            <p className="text-gray-500 max-w-md">
+              Ask me anything about your medications, symptoms, or general health questions.
+            </p>
+          </div>
+        ) : (
+          messages.map((message, index) => (
+            <MessageBubble key={index} message={message} />
+          ))
+        )}
+        {loading && (
+          <div className="flex justify-start mb-4">
+            <div className="bg-gray-100 rounded-2xl rounded-tl-none p-3">
+              <Loader className="w-5 h-5 animate-spin text-gray-500" />
+            </div>
           </div>
         )}
-      </header>
+        <div ref={messagesEndRef} />
+      </div>
 
-      <div className="chat-history">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`chat-message ${msg.sender === "user" ? "user" : "bot"}`}
-          >
-            {msg.text}
+      {/* Input Area */}
+      <div className="border-t border-gray-200 p-4 bg-white">
+        {!profileData ? (
+          <Alert className="bg-amber-50 border-amber-200 mb-4">
+            <AlertDescription className="text-amber-800">
+              Please complete your profile in the Profile section before using the chat.
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <div className="flex items-center gap-2 max-w-4xl mx-auto">
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Ask about your health or medications..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              disabled={loading || !profileData}
+              className="flex-1 p-3 border border-gray-200 rounded-full focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-500"
+            />
+            <button
+              onClick={handleSend}
+              disabled={!input.trim() || loading || !profileData}
+              className={`p-3 rounded-full transition-colors ${
+                !input.trim() || loading || !profileData
+                  ? 'bg-gray-100 text-gray-400'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
+            >
+              <Send className="w-5 h-5" />
+            </button>
           </div>
-        ))}
-        {loading && <div className="chat-message bot">Typing...</div>}
+        )}
       </div>
-
-      <div className="chat-input">
-        <input
-          type="text"
-          placeholder={profileData 
-            ? "Ask about your health or medications..." 
-            : "Please complete your profile first"}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={handleKeyPress}
-          disabled={loading || !profileData}
-        />
-        <button 
-          onClick={handleSend} 
-          disabled={loading || !profileData}
-        >
-          Send
-        </button>
-      </div>
-
-      {!profileData && (
-        <div className="no-profile-warning">
-          Please complete your profile in the Profile section before using the chat.
-        </div>
-      )}
     </div>
   );
 };
