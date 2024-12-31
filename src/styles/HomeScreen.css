@@ -133,6 +133,7 @@
   justify-content: space-around;
   padding: 10px;
   background: #FF6A00;
+  border-radius: 15 px;
 }
 
 .bottom-nav button {
