@@ -6,11 +6,13 @@ import { auth, db } from "../firebaseConfig";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import Modal from "react-modal";
 import Logo from "../assets/logo.png";
-import BottomNavigation from "./BottomNavigation";
+import { useNavigate } from "react-router-dom";
+//import BottomNavigation from "./BottomNavigation";
 
 Modal.setAppElement("#root");
 
 const CalendarScreen = () => {
+  const navigate = useNavigate();
   const [medications, setMedications] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [medicationsForDate, setMedicationsForDate] = useState([]);
