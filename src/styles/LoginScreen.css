@@ -7,7 +7,7 @@
     min-height: 100vh;
     background: #ffffff; /* White background */
     color: #000000; /* Black text */
-    font-family: 'Poppins', sans-serif; /* Sleek font */
+    font-family: 'Poppins'; /* Sleek font */
     padding: 20px;
   }
   
@@ -28,7 +28,7 @@
   .login-subtitle {
     font-size: 1rem;
     margin-bottom: 30px;
-    color: #9CAF88; /* Secondary accent for subtle text */
+    color: #000000; /* Secondary accent for subtle text */
     opacity: 0.85;
   }
   

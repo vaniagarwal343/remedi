@@ -24,8 +24,8 @@ const LoginScreen = () => {
   return (
     <div className="login-container">
       <img src={Logo} alt="REMEDII Logo" className="login-logo" />
-      <h1 className="login-title">Welcome to REMEDII</h1>
-      <p className="login-subtitle">Your personalized medication tracker</p>
+      <h1 className="login-title">welcome to Remedii!</h1>
+      <p className="login-subtitle">your personal medication manager</p>
       <div className="login-form">
         <input
           type="email"
