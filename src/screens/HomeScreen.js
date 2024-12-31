@@ -2,50 +2,55 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebaseConfig";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
-import "../styles/HomeScreen.css"; // For styling
+import "../styles/HomeScreen.css";
+import Logo from "../assets/logo.png"; // Ensure the logo is accessible
 
 const HomeScreen = () => {
   const navigate = useNavigate();
-  const [medications, setMedications] = useState([]); // State to store medications
+  const [medications, setMedications] = useState([]);
 
-  // Fetch medications for the logged-in user
   useEffect(() => {
-    const user = auth.currentUser; // Get the logged-in user
+    const user = auth.currentUser;
     if (!user) {
       alert("You need to be logged in.");
-      navigate("/"); // Redirect to login if not authenticated
+      navigate("/");
       return;
     }
 
     const medicationsRef = collection(db, "medications");
-    const q = query(medicationsRef, where("userId", "==", user.uid)); // Query user-specific medications
+    const q = query(medicationsRef, where("userId", "==", user.uid));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const meds = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setMedications(meds); // Update state with medication data
+      setMedications(meds);
     });
 
-    return () => unsubscribe(); // Clean up listener on component unmount
+    return () => unsubscribe();
   }, [navigate]);
 
   return (
     <div className="home-screen">
+      {/* Logo */}
+      <div className="logo-container">
+        <img src={Logo} alt="REMEDII Logo" className="header-logo" />
+      </div>
+
       {/* Header */}
       <header className="home-header">
         <h1>How are you feeling today?</h1>
       </header>
 
-      {/* Daily Insights and Reminders */}
+      {/* Daily Insights */}
       <section className="daily-section">
         <h2>Daily Insights & Reminders</h2>
         <ul>
           {medications.length > 0 ? (
             medications.map((med) => (
               <li key={med.id}>
-                • {med.medicationName} - Take {med.dosage} {med.frequency}.
+                {med.icon} {med.medicationName} - Take {med.dosage} {med.frequency}.
               </li>
             ))
           ) : (
@@ -57,18 +62,23 @@ const HomeScreen = () => {
       {/* Quick Questions */}
       <section className="quick-questions">
         <h2>Quick Questions</h2>
-        <input
-          type="text"
-          placeholder="Ask me a question!"
-          onClick={() => navigate("/chatbot")} // Redirect to Chatbot page
-        />
+        <div className="question-input">
+          <span className="search-icon">🔍</span>
+          <input
+            type="text"
+            placeholder="Ask me a question!"
+            onClick={() => navigate("/chatbot")}
+          />
+        </div>
       </section>
 
       {/* Medication Log */}
       <section className="medication-log">
         <h2>Log</h2>
         <div className="add-medication" onClick={() => navigate("/add-medication")}>
-          <span>+</span>
+          <div className="add-button">
+            <span>+</span>
+          </div>
           <p>Add Medication</p>
         </div>
       </section>
@@ -76,7 +86,7 @@ const HomeScreen = () => {
       {/* Bottom Navigation */}
       <nav className="bottom-nav">
         <button onClick={() => navigate("/home")}>Home</button>
-        <button onClick={() => navigate("/calendar")}>Calendar</button>
+        <button onClick={() => navigate("/calendar")}>Tracker</button>
         <button onClick={() => navigate("/chatbot")}>Quick Q/A</button>
         <button onClick={() => navigate("/profile")}>Profile</button>
       </nav>
