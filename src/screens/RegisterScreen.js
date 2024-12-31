@@ -28,19 +28,19 @@ const RegisterScreen = () => {
   return (
     <div className="register-container">
       <img src={Logo} alt="REMEDII Logo" className="register-logo" />
-      <h1 className="register-title">Register</h1>
-      <p className="register-subtitle">Create your account to get started</p>
+      <h1 className="register-title">register</h1>
+      <p className="register-subtitle">create your account to get started</p>
       <div className="register-form">
         <input
           type="email"
-          placeholder="Enter your email"
+          placeholder="enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="register-input"
         />
         <input
           type="password"
-          placeholder="Enter your password"
+          placeholder="enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="register-input"
@@ -53,12 +53,12 @@ const RegisterScreen = () => {
           className="register-input"
         />
         <button onClick={handleRegister} className="register-button">
-          Register
+          register
         </button>
         <p className="register-footer">
-          Already have an account?{' '}
+          already have an account?{' '}
           <span className="register-link" onClick={() => navigate('/login')}>
-            Login here
+            login here
           </span>
         </p>
       </div>
