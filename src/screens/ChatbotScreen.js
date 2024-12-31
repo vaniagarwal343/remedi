@@ -2,7 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from "axios";
 import { useUserProfile } from '../context/UserProfileContext';
 import { Send, Loader, AlertCircle } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+
+// Simple alert component to replace shadcn Alert
+const SimpleAlert = ({ children }) => (
+  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+    <p className="text-amber-800">{children}</p>
+  </div>
+);
 
 const ChatbotScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -145,11 +151,9 @@ const ChatbotScreen = () => {
       {/* Input Area */}
       <div className="border-t border-gray-200 p-4 bg-white">
         {!profileData ? (
-          <Alert className="bg-amber-50 border-amber-200 mb-4">
-            <AlertDescription className="text-amber-800">
-              Please complete your profile in the Profile section before using the chat.
-            </AlertDescription>
-          </Alert>
+          <SimpleAlert>
+            Please complete your profile in the Profile section before using the chat.
+          </SimpleAlert>
         ) : (
           <div className="flex items-center gap-2 max-w-4xl mx-auto">
             <input
