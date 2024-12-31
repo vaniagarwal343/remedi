@@ -5,66 +5,71 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #00a86b, #005f73); /* Updated REMEDII colors */
-    color: #fff;
-    font-family: 'Roboto', sans-serif;
+    background: #ffffff; /* White background */
+    color: #000000; /* Black text */
+    font-family: 'Poppins', sans-serif; /* Sleek font */
     padding: 20px;
   }
   
   /* Logo */
   .login-logo {
-    width: 120px;
+    width: 150px;
     margin-bottom: 20px;
   }
   
   /* Title and subtitle */
   .login-title {
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: bold;
+    color: #0D315C; /* Blue for title */
     margin-bottom: 10px;
   }
   
   .login-subtitle {
     font-size: 1rem;
     margin-bottom: 30px;
+    color: #9CAF88; /* Secondary accent for subtle text */
     opacity: 0.85;
   }
   
   /* Form container */
-  .login-form {
+/* Ensure the form doesn't overflow */
+ .login-form {
     width: 100%;
     max-width: 400px;
     background: #ffffff;
+    border: 2px solid #0D315C; /* Blue border */
     border-radius: 10px;
-    padding: 25px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    padding: 20px; /* Reduced padding to prevent crowding */
+    box-sizing: border-box; /* Include padding and border in width */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    color: #333;
   }
   
-  /* Input styles */
+  /* Prevent input overflow */
   .login-input {
-    width: 100%;
-    padding: 12px 15px;
-    margin: 15px 0;
-    border: 1px solid #ccc;
+    width: calc(100% - 30px); /* Adjust width relative to container padding */
+    padding: 10px 15px;
+    margin: 10px 0;
+    border: 2px solid #0D315C; /* Blue border */
     border-radius: 8px;
     font-size: 1rem;
+    box-sizing: border-box; /* Include padding in width calculation */
     outline: none;
-    transition: border 0.3s ease-in-out;
   }
   
+  
   .login-input:focus {
-    border-color: #00a86b; /* Updated brand focus color */
-    box-shadow: 0 0 5px rgba(0, 168, 107, 0.5);
+    border-color: #FF6A00; /* Orange focus */
+    background-color: #f9f9f9;
   }
   
   /* Button styles */
   .login-button {
     width: 100%;
     padding: 12px 15px;
-    background: #00a86b;
-    color: #fff;
+    background: #FF6A00; /* Orange button */
+    color: #ffffff; /* White text */
     font-size: 1rem;
     font-weight: bold;
     border: none;
@@ -74,7 +79,7 @@
   }
   
   .login-button:hover {
-    background: #005f73;
+    background: #0D315C; /* Blue on hover */
     transform: scale(1.02);
   }
   
@@ -89,13 +94,13 @@
   }
   
   .login-link {
-    color: #00a86b;
+    color: #FF6A00; /* Orange for link */
     font-weight: bold;
     cursor: pointer;
     transition: color 0.3s ease-in-out;
   }
   
   .login-link:hover {
-    color: #005f73;
+    color: #0D315C; /* Blue on hover */
   }
   

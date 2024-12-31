@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from "../firebaseConfig";
-import '../styles/loginscreen.css'; // Import the updated CSS file
+import '../styles/loginscreen.css';
+import Logo from '../assets/logo.png'; // Adjust path if needed
+
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -21,7 +23,7 @@ const LoginScreen = () => {
 
   return (
     <div className="login-container">
-      <img src="../assets/logo.png" alt="REMEDII Logo" className="login-logo" />
+      <img src={Logo} alt="REMEDII Logo" className="login-logo" />
       <h1 className="login-title">Welcome to REMEDII</h1>
       <p className="login-subtitle">Your personalized medication tracker</p>
       <div className="login-form">
