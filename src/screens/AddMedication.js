@@ -4,7 +4,7 @@ import { collection, addDoc } from "firebase/firestore";
 import "../styles/AddMedication.css";
 import { auth, db } from "../firebaseConfig";
 import Logo from "../assets/logo.png";
-import BottomNavigation from "../components/BottomNavigation";
+// import BottomNavigation from "../components/BottomNavigation";
 
 const AddMedication = () => {
   const navigate = useNavigate();
@@ -155,7 +155,12 @@ const AddMedication = () => {
       </form>
 
       {/* Bottom Navigation */}
-      <BottomNavigation />
+      <nav className="bottom-nav">
+        <button onClick={() => navigate("/home")}>Home</button>
+        <button onClick={() => navigate("/calendar")}>Tracker</button>
+        <button onClick={() => navigate("/chatbot")}>Quick Q/A</button>
+        <button onClick={() => navigate("/profile")}>Profile</button>
+      </nav>
     </div>
   );
 };
