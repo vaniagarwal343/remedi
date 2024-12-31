@@ -42,7 +42,7 @@ const LoginScreen = () => {
           className="login-input"
         />
         <button onClick={handleLogin} className="login-button">
-          Login
+          login
         </button>
         <p className="login-footer">
           don’t have an account?{' '}

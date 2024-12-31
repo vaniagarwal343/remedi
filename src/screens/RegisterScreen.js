@@ -47,7 +47,7 @@ const RegisterScreen = () => {
         />
         <input
           type="password"
-          placeholder="Confirm your password"
+          placeholder="confirm your password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           className="register-input"
@@ -57,7 +57,7 @@ const RegisterScreen = () => {
         </button>
         <p className="register-footer">
           already have an account?{' '}
-          <span className="register-link" onClick={() => navigate('/login')}>
+          <span className="register-link" onClick={() => navigate('/')}>
             login here
           </span>
         </p>
