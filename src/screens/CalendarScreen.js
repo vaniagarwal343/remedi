@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Calendar from "react-calendar"; // Calendar library
-import "react-calendar/dist/Calendar.css"; // Default styles
-import "../styles/CalendarScreen.css"; // Custom styles
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import "../styles/CalendarScreen.css";
 import { auth, db } from "../firebaseConfig";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
-import Modal from "react-modal"; // For displaying details or edits
+import Modal from "react-modal";
+import Logo from "../assets/logo.png";
+import BottomNavigation from "./BottomNavigation";
 
-Modal.setAppElement("#root"); // Accessibility requirement for Modal
+Modal.setAppElement("#root");
 
 const CalendarScreen = () => {
   const [medications, setMedications] = useState([]);
@@ -32,7 +34,6 @@ const CalendarScreen = () => {
     return () => unsubscribe();
   }, []);
 
-  // Get medications for the selected date
   const getMedicationsForDate = (date) => {
     const formattedDate = date.toISOString().split("T")[0];
     return medications.filter((med) => med.startDate <= formattedDate && med.endDate >= formattedDate);
@@ -51,10 +52,17 @@ const CalendarScreen = () => {
 
   return (
     <div className="calendar-screen">
+      {/* Logo Section */}
+      <div className="logo-container">
+        <img src={Logo} alt="REMEDII Logo" className="header-logo" />
+      </div>
+
+      {/* Header */}
       <header>
-        <h1>Medication Calendar</h1>
+        <h1 className="calendar-title">Medication Calendar</h1>
       </header>
 
+      {/* Calendar */}
       <div className="calendar-container">
         <Calendar
           onClickDay={handleDateClick}
@@ -65,7 +73,7 @@ const CalendarScreen = () => {
         />
       </div>
 
-      {/* Modal for viewing/editing medications */}
+      {/* Modal */}
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -84,8 +92,18 @@ const CalendarScreen = () => {
         ) : (
           <p>No medications scheduled for this date.</p>
         )}
-        <button onClick={closeModal}>Close</button>
+        <button className="close-button" onClick={closeModal}>
+          Close
+        </button>
       </Modal>
+
+      {/* Bottom Navigation */}
+      <nav className="bottom-nav">
+        <button onClick={() => navigate("/home")}>Home</button>
+        <button onClick={() => navigate("/calendar")}>Tracker</button>
+        <button onClick={() => navigate("/chatbot")}>Quick Q/A</button>
+        <button onClick={() => navigate("/profile")}>Profile</button>
+      </nav>
     </div>
   );
 };
