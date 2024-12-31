@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebaseConfig";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import "../styles/HomeScreen.css";
-import Logo from "../assets/logo.png"; // Ensure the logo is accessible
+import Logo from "../assets/logo.png";
 
 const HomeScreen = () => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const HomeScreen = () => {
 
   return (
     <div className="home-screen">
-      {/* Logo */}
+      {/* Logo Section */}
       <div className="logo-container">
         <img src={Logo} alt="REMEDII Logo" className="header-logo" />
       </div>
