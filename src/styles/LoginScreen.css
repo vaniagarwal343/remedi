@@ -5,23 +5,29 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    background: linear-gradient(135deg, #00a86b, #005f73); /* Updated REMEDII colors */
     color: #fff;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', sans-serif;
     padding: 20px;
+  }
+  
+  /* Logo */
+  .login-logo {
+    width: 120px;
+    margin-bottom: 20px;
   }
   
   /* Title and subtitle */
   .login-title {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: bold;
     margin-bottom: 10px;
   }
   
   .login-subtitle {
     font-size: 1rem;
-    margin-bottom: 20px;
-    opacity: 0.9;
+    margin-bottom: 30px;
+    opacity: 0.85;
   }
   
   /* Form container */
@@ -30,8 +36,8 @@
     max-width: 400px;
     background: #ffffff;
     border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     text-align: center;
     color: #333;
   }
@@ -40,35 +46,35 @@
   .login-input {
     width: 100%;
     padding: 12px 15px;
-    margin: 10px 0;
+    margin: 15px 0;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 1rem;
     outline: none;
     transition: border 0.3s ease-in-out;
   }
   
   .login-input:focus {
-    border-color: #6a11cb;
-    box-shadow: 0 0 5px rgba(106, 17, 203, 0.5);
+    border-color: #00a86b; /* Updated brand focus color */
+    box-shadow: 0 0 5px rgba(0, 168, 107, 0.5);
   }
   
   /* Button styles */
   .login-button {
     width: 100%;
     padding: 12px 15px;
-    background: #6a11cb;
+    background: #00a86b;
     color: #fff;
     font-size: 1rem;
     font-weight: bold;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     transition: background 0.3s ease-in-out, transform 0.2s;
   }
   
   .login-button:hover {
-    background: #2575fc;
+    background: #005f73;
     transform: scale(1.02);
   }
   
@@ -78,18 +84,18 @@
   
   /* Footer styles */
   .login-footer {
-    margin-top: 15px;
+    margin-top: 20px;
     font-size: 0.9rem;
   }
   
   .login-link {
-    color: #6a11cb;
+    color: #00a86b;
     font-weight: bold;
     cursor: pointer;
     transition: color 0.3s ease-in-out;
   }
   
   .login-link:hover {
-    color: #2575fc;
+    color: #005f73;
   }
   
