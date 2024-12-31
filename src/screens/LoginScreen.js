@@ -24,19 +24,19 @@ const LoginScreen = () => {
   return (
     <div className="login-container">
       <img src={Logo} alt="REMEDII Logo" className="login-logo" />
-      <h1 className="login-title">welcome to Remedii!</h1>
+      <h1 className="login-title">welcome to remedii!</h1>
       <p className="login-subtitle">your personal medication manager</p>
       <div className="login-form">
         <input
           type="email"
-          placeholder="Enter your email"
+          placeholder="enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="login-input"
         />
         <input
           type="password"
-          placeholder="Enter your password"
+          placeholder="enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="login-input"
@@ -45,9 +45,9 @@ const LoginScreen = () => {
           Login
         </button>
         <p className="login-footer">
-          Don’t have an account?{' '}
+          don’t have an account?{' '}
           <span className="login-link" onClick={() => navigate('/register')}>
-            Register Now
+            register now
           </span>
         </p>
       </div>
