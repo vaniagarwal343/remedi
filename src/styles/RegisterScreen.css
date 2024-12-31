@@ -1,0 +1,108 @@
+/* General container styles */
+.register-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #ffffff;
+    color: #000000;
+    font-family: 'Poppins', sans-serif;
+    padding: 20px;
+  }
+  
+  /* Logo */
+  .register-logo {
+    width: 150px;
+    margin-bottom: 20px;
+  }
+  
+  /* Title and subtitle */
+  .register-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0D315C; /* Blue for title */
+    margin-bottom: 10px;
+  }
+  
+  .register-subtitle {
+    font-size: 1rem;
+    margin-bottom: 30px;
+    color: #9CAF88; /* Secondary accent for subtitle */
+    opacity: 0.85;
+  }
+  
+  /* Form container */
+  .register-form {
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff;
+    border: 2px solid #0D315C;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  /* Input styles */
+  .register-input {
+    width: calc(100% - 30px);
+    padding: 10px 15px;
+    margin: 10px 0;
+    border: 2px solid #0D315C;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    outline: none;
+  }
+  
+  .register-input::placeholder {
+    color: #9CAF88;
+    font-size: 0.95rem;
+  }
+  
+  .register-input:focus {
+    border-color: #FF6A00;
+    box-shadow: 0 0 8px rgba(255, 106, 0, 0.5);
+  }
+  
+  /* Button styles */
+  .register-button {
+    width: 100%;
+    padding: 12px 15px;
+    background: #FF6A00;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+  }
+  
+  .register-button:hover {
+    background: #0D315C;
+    transform: scale(1.02);
+  }
+  
+  .register-button:active {
+    transform: scale(0.98);
+  }
+  
+  /* Footer styles */
+  .register-footer {
+    margin-top: 20px;
+    font-size: 0.9rem;
+  }
+  
+  .register-link {
+    color: #FF6A00;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .register-link:hover {
+    color: #0D315C;
+  }
+  
