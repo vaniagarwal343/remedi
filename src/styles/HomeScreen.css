@@ -138,6 +138,7 @@
 .bottom-nav button {
   background: none;
   border: none;
+  border-radius: 15 px;
   color: #ffffff;
   font-size: 0.9rem;
   cursor: pointer;

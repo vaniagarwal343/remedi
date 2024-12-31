@@ -1,14 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { collection, addDoc } from "firebase/firestore";
-import "../styles/AddMedication.css"; // Styling for the screen
+import "../styles/AddMedication.css";
 import { auth, db } from "../firebaseConfig";
-
+import Logo from "../assets/logo.png";
+import BottomNavigation from "./BottomNavigation";
 
 const AddMedication = () => {
   const navigate = useNavigate();
-
-  // Form state
   const [medicationName, setMedicationName] = useState("");
   const [dosage, setDosage] = useState("");
   const [frequency, setFrequency] = useState("Once daily");
@@ -18,55 +17,63 @@ const AddMedication = () => {
   const [totalSupply, setTotalSupply] = useState("");
   const [dosePerDay, setDosePerDay] = useState("");
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const user = auth.currentUser; // Get current user
-    if (!user) {
-      alert("You need to be logged in to add medication.");
-      navigate("/"); // Redirect to login if not authenticated
-      return;
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("you need to be logged in to add medication.");
+        navigate("/");
+        return;
+      }
+
+      const calculatedEndDate = !endDate
+        ? new Date(
+            new Date(startDate).getTime() +
+              (totalSupply / dosePerDay) * 24 * 60 * 60 * 1000
+          )
+            .toISOString()
+            .split("T")[0]
+        : endDate;
+
+      await addDoc(collection(db, "medications"), {
+        medicationName,
+        dosage,
+        frequency,
+        startDate,
+        endDate: calculatedEndDate,
+        instructions,
+        totalSupply,
+        dosePerDay,
+        userId: user.uid,
+        createdAt: new Date(),
+      });
+
+      alert("Medication added successfully!");
+      navigate("/home");
+    } catch (error) {
+      console.error("Error adding medication:", error);
+      alert("Failed to add medication. Please try again.");
     }
-
-    const calculatedEndDate = !endDate
-      ? new Date(
-          new Date(startDate).getTime() + (totalSupply / dosePerDay) * 24 * 60 * 60 * 1000
-        ).toISOString().split("T")[0]
-      : endDate;
-
-    // Save to Firestore
-    await addDoc(collection(db, "medications"), {
-      medicationName,
-      dosage,
-      frequency,
-      startDate,
-      endDate: calculatedEndDate,
-      instructions,
-      totalSupply,
-      dosePerDay,
-      userId: user.uid, // Save with the user's ID
-      createdAt: new Date(),
-    });
-
-    alert("Medication added successfully!");
-    navigate("/home"); // Redirect to the homepage
-  } catch (error) {
-    console.error("Error adding medication:", error);
-    alert("Failed to add medication. Please try again.");
-  }
-};
-
+  };
 
   return (
     <div className="add-medication-screen">
+      {/* Logo Section */}
+      <div className="logo-container">
+        <img src={Logo} alt="REMEDII Logo" className="header-logo" />
+      </div>
+
+      {/* Header */}
       <header className="header">
-        <h1>Add Medication</h1>
+        <h1>add medication</h1>
       </header>
 
+      {/* Form */}
       <form className="medication-form" onSubmit={handleSubmit}>
         <label>
-          Medication Name
+          medication name
           <input
             type="text"
             value={medicationName}
@@ -76,7 +83,7 @@ const handleSubmit = async (e) => {
         </label>
 
         <label>
-          Dosage (e.g., mg, ml)
+          dosage (e.g., mg, ml)
           <input
             type="text"
             value={dosage}
@@ -86,7 +93,7 @@ const handleSubmit = async (e) => {
         </label>
 
         <label>
-          Frequency
+          frequency
           <select value={frequency} onChange={(e) => setFrequency(e.target.value)}>
             <option value="Once daily">Once daily</option>
             <option value="Twice daily">Twice daily</option>
@@ -96,7 +103,7 @@ const handleSubmit = async (e) => {
         </label>
 
         <label>
-          Start Date
+          start date
           <input
             type="date"
             value={startDate}
@@ -106,7 +113,7 @@ const handleSubmit = async (e) => {
         </label>
 
         <label>
-          End Date (optional)
+          end date (optional)
           <input
             type="date"
             value={endDate}
@@ -115,7 +122,7 @@ const handleSubmit = async (e) => {
         </label>
 
         <label>
-          Special Instructions
+          special instructions
           <textarea
             value={instructions}
             onChange={(e) => setInstructions(e.target.value)}
@@ -123,7 +130,7 @@ const handleSubmit = async (e) => {
         </label>
 
         <label>
-          Total Supply (e.g., 30 tablets)
+          total supply (e.g., 30 tablets)
           <input
             type="number"
             value={totalSupply}
@@ -133,7 +140,7 @@ const handleSubmit = async (e) => {
         </label>
 
         <label>
-          Dose Per Day (e.g., 2 tablets/day)
+          dose per day (e.g., 2 tablets/day)
           <input
             type="number"
             value={dosePerDay}
@@ -142,8 +149,13 @@ const handleSubmit = async (e) => {
           />
         </label>
 
-        <button type="submit">Add Medication</button>
+        <button type="submit" className="add-button">
+          add medication
+        </button>
       </form>
+
+      {/* Bottom Navigation */}
+      <BottomNavigation />
     </div>
   );
 };

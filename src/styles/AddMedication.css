@@ -1,0 +1,81 @@
+/* General Layout */
+.add-medication-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: "Poppins", sans-serif;
+    background: #ffffff;
+  }
+  
+  /* Logo Section */
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .header-logo {
+    width: 120px;
+    height: auto;
+  }
+  
+  /* Header */
+  .header h1 {
+    text-align: center;
+    font-size: 1.8rem;
+    color: #0D315C;
+    margin-bottom: 20px;
+  }
+  
+  /* Form */
+  .medication-form {
+    background: #f9f9f9;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .medication-form label {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 1rem;
+    color: #0D315C;
+  }
+  
+  .medication-form input,
+  .medication-form select,
+  .medication-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 2px solid #0D315C;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+  
+  .medication-form textarea {
+    height: 80px;
+  }
+  
+  .add-button {
+    display: block;
+    width: 100%;
+    background: #FF6A00;
+    color: #ffffff;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    margin-top: 15px;
+  }
+  
+  .add-button:hover {
+    background: #0D315C;
+    transform: scale(1.02);
+  }
+  
