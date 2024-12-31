@@ -79,3 +79,21 @@
     transform: scale(1.02);
   }
   
+  /* Bottom Navigation */
+  .bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background: #FF6A00;
+  }
+  
+  .bottom-nav button {
+    background: none;
+    border: none;
+    border-radius: 15 px;
+    color: #ffffff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: center;
+  }
+  

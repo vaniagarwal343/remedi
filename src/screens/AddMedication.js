@@ -4,7 +4,7 @@ import { collection, addDoc } from "firebase/firestore";
 import "../styles/AddMedication.css";
 import { auth, db } from "../firebaseConfig";
 import Logo from "../assets/logo.png";
-import BottomNavigation from "./BottomNavigation";
+import BottomNavigation from "../components/BottomNavigation";
 
 const AddMedication = () => {
   const navigate = useNavigate();
