@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth, db } from '../firebaseConfig';
-import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 const UserProfileContext = createContext();
 
@@ -20,7 +20,8 @@ export const UserProfileProvider = ({ children }) => {
       }
 
       // Fetch user profile
-      const userDoc = await getDoc(doc(db, "users", user.uid));
+      const userRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userRef);
       const userData = userDoc.data();
       
       // Fetch medications
@@ -35,7 +36,7 @@ export const UserProfileProvider = ({ children }) => {
       }));
 
       const fullProfile = {
-        ...userData,
+        ...(userData || {}), // Handle case where userData is null
         medications,
         userId: user.uid,
         lastUpdated: new Date().toISOString()
@@ -58,13 +59,13 @@ export const UserProfileProvider = ({ children }) => {
       // Get a reference to the user document
       const userRef = doc(db, "users", user.uid);
 
-      // Update the document with the new data
-      await updateDoc(userRef, {
+      // Use setDoc with merge option instead of updateDoc
+      await setDoc(userRef, {
         name: newProfileData.name,
         allergies: newProfileData.allergies,
         conditions: newProfileData.conditions,
         lastUpdated: new Date().toISOString()
-      });
+      }, { merge: true }); // This will create the document if it doesn't exist
 
       // Refresh the profile data
       await fetchProfileData();
@@ -72,7 +73,7 @@ export const UserProfileProvider = ({ children }) => {
       return true;
     } catch (error) {
       console.error("Error updating profile:", error);
-      throw error; // Re-throw the error so we can handle it in the component
+      throw error;
     }
   };
 
