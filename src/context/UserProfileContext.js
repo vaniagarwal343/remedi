@@ -20,7 +20,6 @@ export const UserProfileProvider = ({ children }) => {
       }
 
       // Fetch user profile
-      console.log("Fetching profile for user:", user.uid);
       const userDoc = await getDoc(doc(db, "users", user.uid));
       const userData = userDoc.data();
       
@@ -42,7 +41,6 @@ export const UserProfileProvider = ({ children }) => {
         lastUpdated: new Date().toISOString()
       };
 
-      console.log("Setting profile data:", fullProfile);
       setProfileData(fullProfile);
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -56,13 +54,25 @@ export const UserProfileProvider = ({ children }) => {
     try {
       const user = auth.currentUser;
       if (!user) throw new Error('No user logged in');
+
+      // Get a reference to the user document
+      const userRef = doc(db, "users", user.uid);
+
+      // Update the document with the new data
+      await updateDoc(userRef, {
+        name: newProfileData.name,
+        allergies: newProfileData.allergies,
+        conditions: newProfileData.conditions,
+        lastUpdated: new Date().toISOString()
+      });
+
+      // Refresh the profile data
+      await fetchProfileData();
       
-      await updateDoc(doc(db, "users", user.uid), newProfileData);
-      await fetchProfileData(); // Refresh the profile data after update
       return true;
     } catch (error) {
       console.error("Error updating profile:", error);
-      throw error;
+      throw error; // Re-throw the error so we can handle it in the component
     }
   };
 
@@ -106,3 +116,5 @@ export const useUserProfile = () => {
   }
   return context;
 };
+
+export default UserProfileContext;
