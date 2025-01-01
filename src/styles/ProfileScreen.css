@@ -1,47 +1,141 @@
+/* General Layout */
 .profile-screen {
-    padding: 20px;
-  }
-  
-  header {
-    text-align: center;
-  }
-  
-  .profile-section,
-  .medical-history-section,
-  .medication-list-section {
-    margin: 20px 0;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
-  input,
-  textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  textarea {
-    resize: vertical;
-  }
-  
-  .save-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #2b6cb0;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .save-button:hover {
-    background-color: #244a85;
-  }
-  
+  font-family: "Poppins", sans-serif;
+  background-color: #ffffff;
+  color: #333333;
+  padding: 20px;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-header h1 {
+  font-size: 2rem;
+  color: #0D315C;
+}
+
+/* Section Styling */
+.profile-section {
+  margin-bottom: 20px;
+}
+
+.profile-section h2 {
+  font-size: 1.5rem;
+  color: #0D315C;
+  margin-bottom: 10px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.info-label {
+  font-weight: bold;
+}
+
+.info-value {
+  color: #555555;
+}
+
+/* Medication List */
+.medication-list {
+  list-style: none;
+  padding: 0;
+}
+
+.medication-item {
+  padding: 10px;
+  background: #f9f9f9;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.medication-item:hover {
+  background: #FF6A00;
+  color: white;
+}
+
+/* Modal Styling */
+.edit-modal {
+  background: white;
+  padding: 20px;
+  max-width: 400px;
+  margin: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.edit-modal h2 {
+  font-size: 1.5rem;
+  color: #0D315C;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+}
+
+.cancel-button {
+  background: #dddddd;
+  color: #333333;
+  border: none;
+  padding: 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.save-button {
+  background: #FF6A00;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Edit Button */
+.edit-button-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.edit-button {
+  background-color: #0D315C;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.edit-button:hover {
+  background-color: #FF6A00;
+}

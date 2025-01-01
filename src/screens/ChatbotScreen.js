@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useUserProfile } from "../context/UserProfileContext";
-import { Send, Loader, AlertCircle } from "lucide-react";
+import { Send, Loader } from "lucide-react";
 import "../styles/ChatbotScreen.css";
 import Logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
 
 const ChatbotScreen = () => {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,18 +27,18 @@ const ChatbotScreen = () => {
     inputRef.current?.focus();
   }, []);
 
-  const getConversationHistory = () => {
-    return messages.slice(-5).map((msg) => ({
-      role: msg.sender === "user" ? "user" : "assistant",
-      content: msg.text,
-    }));
-  };
+  // Add a welcome message with profile data on initialization
+  useEffect(() => {
+    if (!profileLoading && profileData) {
+      const welcomeMessage = `Hello ${profileData.name || "there"}! Welcome to your health assistant. How can I assist you today?`;
+      setMessages([{ sender: "bot", text: welcomeMessage }]);
+    }
+  }, [profileLoading, profileData]);
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
 
-    const newUserMessage = { sender: "user", text: input };
-    setMessages((prev) => [...prev, newUserMessage]);
+    setMessages((prev) => [...prev, { sender: "user", text: input }]);
     setInput("");
     setLoading(true);
 
@@ -47,27 +47,26 @@ const ChatbotScreen = () => {
         "https://us-central1-remedicate-app.cloudfunctions.net/api/chat",
         {
           prompt: input,
-          userProfile: profileData,
-          conversationHistory: getConversationHistory(),
+          userProfile: profileData, // Pass profile data to the backend
         }
       );
 
-      const aiResponse = response.data?.response?.trim();
-      if (!aiResponse) throw new Error("Invalid AI response");
-
-      setMessages((prev) => [...prev, { sender: "bot", text: aiResponse }]);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: response.data?.response?.trim() || "Error: No response." },
+      ]);
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.error ||
-        "Oops! Something went wrong. Please try again.";
-      setMessages((prev) => [...prev, { sender: "bot", text: errorMessage }]);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "Error: Could not fetch response." },
+      ]);
     } finally {
       setLoading(false);
     }
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === "Enter" && !e.shiftKey && !loading) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
@@ -76,16 +75,8 @@ const ChatbotScreen = () => {
   const MessageBubble = ({ message }) => {
     const isUser = message.sender === "user";
     return (
-      <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4`}>
-        <div
-          className={`max-w-[80%] p-3 rounded-2xl ${
-            isUser
-              ? "bg-blue-600 text-white rounded-tr-none"
-              : "bg-gray-100 text-gray-800 rounded-tl-none"
-          }`}
-        >
-          <p className="text-sm">{message.text}</p>
-        </div>
+      <div className={`message ${isUser ? "user" : "bot"}`}>
+        <p>{message.text}</p>
       </div>
     );
   };
@@ -105,75 +96,42 @@ const ChatbotScreen = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="chatbot-screen">
       {/* Logo Section */}
-      <div className="logo-container">
-        <img src={Logo} alt="REMEDII Logo" className="header-logo" />
-      </div>
+      {messages.length === 0 && (
+        <div className="centered-logo">
+          <img src={Logo} alt="REMEDII Logo" className="logo" />
+          <h2>Welcome to Your Health Assistant</h2>
+          <p>Ask about medications, symptoms, or health questions!</p>
+        </div>
+      )}
 
-      {/* Header */}
-      <div className="bg-[#0D315C] text-white px-4 py-6">
-        <h1 className="text-2xl font-semibold text-center">Health Assistant</h1>
-        {profileData && (
-          <p className="text-sm text-gray-300 text-center mt-1">
-            Profile loaded for: {profileData.name || "User"}
-          </p>
-        )}
-      </div>
-
-      {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-2">
-        {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full text-center px-4">
-            <AlertCircle className="w-6 h-6 text-blue-500" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Welcome to Your Health Assistant
-            </h3>
-            <p className="text-gray-500 max-w-md">
-              Ask me anything about your medications, symptoms, or general health
-              questions.
-            </p>
-          </div>
-        ) : (
-          messages.map((message, index) => (
-            <MessageBubble key={index} message={message} />
-          ))
-        )}
+      {/* Chat History */}
+      <div className="chat-history">
+        {messages.map((message, index) => (
+          <MessageBubble key={index} message={message} />
+        ))}
         {loading && (
-          <div className="flex justify-start mb-4">
-            <div className="bg-gray-100 rounded-2xl rounded-tl-none p-3">
-              <Loader className="w-5 h-5 animate-spin text-gray-500" />
-            </div>
+          <div className="message bot">
+            <Loader className="spinner" />
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Area */}
-      <div className="border-t border-gray-200 p-4 bg-white">
-        <div className="flex items-center gap-2 max-w-4xl mx-auto">
-          <input
-            ref={inputRef}
-            type="text"
-            placeholder="Ask about your health or medications..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            disabled={loading || !profileData}
-            className="flex-1 p-3 border border-gray-200 rounded-full focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-500"
-          />
-          <button
-            onClick={handleSend}
-            disabled={!input.trim() || loading || !profileData}
-            className={`p-3 rounded-full transition-colors ${
-              !input.trim() || loading || !profileData
-                ? "bg-gray-100 text-gray-400"
-                : "bg-blue-600 text-white hover:bg-blue-700"
-            }`}
-          >
-            <Send className="w-5 h-5" />
-          </button>
-        </div>
+      {/* Input Section */}
+      <div className="chat-input">
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="Ask about your health or medications..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={handleKeyPress}
+        />
+        <button onClick={handleSend} disabled={!input.trim() || loading}>
+          <Send className="icon" />
+        </button>
       </div>
 
       {/* Bottom Navigation */}

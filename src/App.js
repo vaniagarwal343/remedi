@@ -21,6 +21,7 @@ const App = () => {
           <Route path="/add-medication" element={<AddMedication />} />
           <Route path="/calendar" element={<CalendarScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />
+          <Route path="/edit-profile" element={<EditProfileScreen />} />
         </Routes>
       </BrowserRouter>
     </UserProfileProvider>
