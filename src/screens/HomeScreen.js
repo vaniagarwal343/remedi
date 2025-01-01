@@ -44,20 +44,20 @@ const HomeScreen = () => {
       </header>
 
       {/* Daily Insights */}
-      <section className="daily-section">
-        <h2>Daily Insights & Reminders</h2>
-        <ul>
-          {medications.length > 0 ? (
-            medications.map((med) => (
-              <li key={med.id}>
-                {med.icon} {med.medicationName} - Take {med.dosage} {med.frequency}.
-              </li>
-            ))
-          ) : (
-            <p>No medications added yet. Click "Add Medication" below!</p>
-          )}
-        </ul>
-      </section>
+<section className="daily-section">
+  <h2>Daily Insights & Reminders</h2>
+  <ul>
+    {medications.length > 0 ? (
+      medications.map((med) => (
+        <li key={med.id}>
+          {med.name} - Take {med.dosage} {med.frequency}.
+        </li>
+      ))
+    ) : (
+      <p>No medications added yet. Click "Add Medication" below!</p>
+    )}
+  </ul>
+</section>
 
       {/* Quick Questions */}
       <section className="quick-questions">
