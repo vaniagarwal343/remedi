@@ -4,7 +4,32 @@ import { collection, addDoc } from "firebase/firestore";
 import "../styles/AddMedication.css";
 import { auth, db } from "../firebaseConfig";
 import Logo from "../assets/logo.png";
-// import BottomNavigation from "../components/BottomNavigation";
+
+const validateForm = (data) => {
+  const errors = [];
+  
+  if (!data.medicationName.trim()) {
+    errors.push("Medication name is required");
+  }
+  
+  if (!data.dosage.trim()) {
+    errors.push("Dosage is required");
+  }
+  
+  if (!data.startDate) {
+    errors.push("Start date is required");
+  }
+  
+  if (data.totalSupply <= 0) {
+    errors.push("Total supply must be greater than 0");
+  }
+  
+  if (data.dosePerDay <= 0) {
+    errors.push("Dose per day must be greater than 0");
+  }
+  
+  return errors;
+};
 
 const AddMedication = () => {
   const navigate = useNavigate();
@@ -20,10 +45,23 @@ const AddMedication = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const validationErrors = validateForm({
+      medicationName,
+      dosage,
+      startDate,
+      totalSupply,
+      dosePerDay
+    });
+
+    if (validationErrors.length > 0) {
+      alert(validationErrors.join("\n"));
+      return;
+    }
+
     try {
       const user = auth.currentUser;
       if (!user) {
-        alert("you need to be logged in to add medication.");
+        alert("You need to be logged in to add medication.");
         navigate("/");
         return;
       }
@@ -37,21 +75,22 @@ const AddMedication = () => {
             .split("T")[0]
         : endDate;
 
+      // Create the medication document
       await addDoc(collection(db, "medications"), {
-        medicationName,
-        dosage,
-        frequency,
+        name: medicationName,
+        dosage: dosage,
+        frequency: frequency,
         startDate,
         endDate: calculatedEndDate,
         instructions,
-        totalSupply,
-        dosePerDay,
+        totalSupply: Number(totalSupply),
+        dosePerDay: Number(dosePerDay),
         userId: user.uid,
-        createdAt: new Date(),
+        createdAt: new Date()
       });
 
       alert("Medication added successfully!");
-      navigate("/home");
+      navigate("/profile");
     } catch (error) {
       console.error("Error adding medication:", error);
       alert("Failed to add medication. Please try again.");
@@ -118,6 +157,7 @@ const AddMedication = () => {
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
+            min={startDate} // Prevent end date before start date
           />
         </label>
 
@@ -126,6 +166,7 @@ const AddMedication = () => {
           <textarea
             value={instructions}
             onChange={(e) => setInstructions(e.target.value)}
+            placeholder="Enter any special instructions"
           />
         </label>
 
@@ -135,6 +176,7 @@ const AddMedication = () => {
             type="number"
             value={totalSupply}
             onChange={(e) => setTotalSupply(e.target.value)}
+            min="1"
             required
           />
         </label>
@@ -145,6 +187,8 @@ const AddMedication = () => {
             type="number"
             value={dosePerDay}
             onChange={(e) => setDosePerDay(e.target.value)}
+            min="0.1"
+            step="0.1"
             required
           />
         </label>

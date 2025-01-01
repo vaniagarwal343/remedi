@@ -139,3 +139,37 @@
 .edit-button:hover {
   background-color: #FF6A00;
 }
+
+.medication-info {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.medication-name {
+  font-weight: bold;
+  flex-grow: 1;
+}
+
+.medication-dosage {
+  color: #555555;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background: #FF6A00;
+  border-radius: 15 px;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  border-radius: 15 px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: center;
+}

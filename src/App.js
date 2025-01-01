@@ -7,6 +7,8 @@ import ChatbotScreen from "./screens/ChatbotScreen";
 import AddMedication from "./screens/AddMedication";
 import CalendarScreen from "./screens/CalendarScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import EditProfileScreen from "./screens/EditProfileScreen"
+import EditMedicationScreen from "./screens/EditMedicationScreen"
 import { UserProfileProvider } from './context/UserProfileContext';
 
 const App = () => {
@@ -22,6 +24,7 @@ const App = () => {
           <Route path="/calendar" element={<CalendarScreen />} />
           <Route path="/profile" element={<ProfileScreen />} />
           <Route path="/edit-profile" element={<EditProfileScreen />} />
+          <Route path="/edit-medication" element={<EditMedicationScreen />} />
         </Routes>
       </BrowserRouter>
     </UserProfileProvider>

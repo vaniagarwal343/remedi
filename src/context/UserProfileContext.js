@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth, db } from '../firebaseConfig';
-import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 const UserProfileContext = createContext();
 
@@ -52,6 +52,20 @@ export const UserProfileProvider = ({ children }) => {
     }
   };
 
+  const updateProfile = async (newProfileData) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error('No user logged in');
+      
+      await updateDoc(doc(db, "users", user.uid), newProfileData);
+      await fetchProfileData(); // Refresh the profile data after update
+      return true;
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     // Initial fetch
     fetchProfileData();
@@ -69,15 +83,14 @@ export const UserProfileProvider = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, []); // Empty dependency array
+  }, []);
 
   const value = {
     profileData,
     loading,
-    refreshProfile: fetchProfileData
+    refreshProfile: fetchProfileData,
+    updateProfile
   };
-
-  console.log("UserProfileContext current value:", value);
 
   return (
     <UserProfileContext.Provider value={value}>
@@ -93,5 +106,3 @@ export const useUserProfile = () => {
   }
   return context;
 };
-
-export default UserProfileContext;

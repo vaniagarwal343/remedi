@@ -20,10 +20,11 @@ const EditProfileScreen = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     try {
-      await updateProfile(formData); // Save the updated profile data
+      await updateProfile(formData);
       alert("Profile updated successfully!");
       navigate("/profile");
     } catch (error) {
+      console.error("Error updating profile:", error);
       alert("Error updating profile. Please try again.");
     }
   };
@@ -32,7 +33,6 @@ const EditProfileScreen = () => {
     <div className="edit-profile-screen">
       <h1>Edit Profile</h1>
       <form className="edit-profile-form" onSubmit={handleSave}>
-        {/* Name */}
         <div className="form-group">
           <label htmlFor="name">Name</label>
           <input
@@ -45,7 +45,6 @@ const EditProfileScreen = () => {
           />
         </div>
 
-        {/* Allergies */}
         <div className="form-group">
           <label htmlFor="allergies">Allergies</label>
           <textarea
@@ -57,7 +56,6 @@ const EditProfileScreen = () => {
           />
         </div>
 
-        {/* Conditions */}
         <div className="form-group">
           <label htmlFor="conditions">Conditions</label>
           <textarea
@@ -69,7 +67,6 @@ const EditProfileScreen = () => {
           />
         </div>
 
-        {/* Buttons */}
         <div className="button-group">
           <button
             type="button"
