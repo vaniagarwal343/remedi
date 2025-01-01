@@ -1,23 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { useUserProfile } from "../context/UserProfileContext";
 import "../styles/ProfileScreen.css";
-import { Modal } from "react-modal";
 import { useNavigate } from "react-router-dom";
 
 const ProfileScreen = () => {
   const { profileData } = useUserProfile();
-  const [selectedMedication, setSelectedMedication] = useState(null);
-  const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleEditMedication = (medication) => {
-    setSelectedMedication(medication);
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-    setSelectedMedication(null);
+    navigate('/edit-medication', { state: { medication } });
   };
 
   return (
@@ -60,7 +51,9 @@ const ProfileScreen = () => {
                 onClick={() => handleEditMedication(med)}
               >
                 <span className="medication-name">{med.name}</span>
-                <span className="medication-dosage">{med.dosage}</span>
+                <span className="medication-info">
+                  {med.dosage} - {med.frequency}
+                </span>
               </li>
             ))}
           </ul>
@@ -69,79 +62,20 @@ const ProfileScreen = () => {
         )}
       </section>
 
-      {/* Modal for Editing Medication */}
-      {isModalOpen && selectedMedication && (
-        <Modal
-          isOpen={isModalOpen}
-          onRequestClose={closeModal}
-          className="edit-modal"
-          overlayClassName="modal-overlay"
-        >
-          <h2>Edit Medication</h2>
-          <form>
-            <div className="form-group">
-              <label>Medication Name</label>
-              <input
-                type="text"
-                value={selectedMedication.name}
-                onChange={(e) =>
-                  setSelectedMedication({
-                    ...selectedMedication,
-                    name: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="form-group">
-              <label>Dosage</label>
-              <input
-                type="text"
-                value={selectedMedication.dosage}
-                onChange={(e) =>
-                  setSelectedMedication({
-                    ...selectedMedication,
-                    dosage: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <div className="form-group">
-              <label>Frequency</label>
-              <input
-                type="text"
-                value={selectedMedication.frequency}
-                onChange={(e) =>
-                  setSelectedMedication({
-                    ...selectedMedication,
-                    frequency: e.target.value,
-                  })
-                }
-              />
-            </div>
-            <button type="button" onClick={closeModal} className="cancel-button">
-              Cancel
-            </button>
-            <button
-              type="submit"
-              onClick={(e) => {
-                e.preventDefault();
-                // Logic to save medication changes
-                closeModal();
-              }}
-              className="save-button"
-            >
-              Save
-            </button>
-          </form>
-        </Modal>
-      )}
-
       {/* Edit Button */}
       <div className="edit-button-container">
         <button className="edit-button" onClick={() => navigate("/edit-profile")}>
           Edit Profile
         </button>
       </div>
+
+      {/* Bottom Navigation */}
+      <nav className="bottom-nav">
+        <button onClick={() => navigate("/home")}>Home</button>
+        <button onClick={() => navigate("/calendar")}>Tracker</button>
+        <button onClick={() => navigate("/chatbot")}>Quick Q/A</button>
+        <button onClick={() => navigate("/profile")}>Profile</button>
+      </nav>
     </div>
   );
 };
